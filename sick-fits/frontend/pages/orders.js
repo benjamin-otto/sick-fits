@@ -1,14 +1,14 @@
-import CreateItem from '../components/CreateItem'
 import PleaseSignIn from '../components/PleaseSignIn'
+import OrderList from '../components/OrderList'
 
-const Sell = props => {
+const Orders = props => {
   return (
     <div>
       <PleaseSignIn>
-        <CreateItem />
+        <OrderList />
       </PleaseSignIn>
     </div>
   )
 }
 
-export default Sell
+export default Orders

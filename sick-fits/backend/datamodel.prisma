@@ -1,16 +1,62 @@
+enum Permission {
+  ADMIN
+  USER
+  ITEM_CREATE
+  ITEM_UPDATE
+  ITEM_DELETE
+  PERMISSION_UPDATE
+}
+
 type User {
   id: ID! @id
   name: String!
-  email: String!
+  email: String! @unique
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission] @scalarList(strategy: RELATION)
+  cart: [CartItem!]!
 }
 
 type Item {
+  id: ID! @id
+  user: User!
+  title: String!
+  description: String!
+  image: String
+  largeImage: String
+  price: Int!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type CartItem {
+  id: ID! @id
+  quantity: Int! @default(value: 1)
+  item: Item
+  user: User!
+}
+
+# Essentially the same as item, but we want to store the state of the ordered
+# items at the time of the order.  The item could be updated/deleted but we still
+# want to keep a record of the order.
+type OrderItem { 
   id: ID! @id
   title: String!
   description: String!
   image: String
   largeImage: String
   price: Int!
+  quantity: Int! @default(value: 1)
+  user: User
+}
+
+type Order {
+  id: ID! @id
+  user: User!
+  items: [OrderItem!]!
+  total: Int!  
+  charge: String!         # id provided from Stripe when charge completed
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
